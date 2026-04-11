@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Villageois Civilisé</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#E8510A;--gold-light:#FF7A3D;--black:#080808;--dark:#0F1117;--card:#161A22;--border:rgba(232,81,10,0.15);--white:#F5F0E8;--gray:#7A8090;--red:#E03838;--green:#27AE60;--blue:#3B82F6;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--dark);color:var(--white);min-height:100vh;}
+#loginScreen{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:9999;}
+#loginScreen.hide{display:none;}
+.login-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:100%;max-width:400px;}
+.login-logo{text-align:center;margin-bottom:2rem;}
+.login-logo .lni{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--black);margin-bottom:.8rem;}
+.login-logo h2{font-family:'Playfair Display',serif;font-size:1.5rem;}
+.login-logo p{font-size:.78rem;color:var(--gray);margin-top:.2rem;}
+.lf{margin-bottom:1rem;}
+.lf label{display:block;font-size:.72rem;font-weight:700;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
+.lf input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:.75rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;}
+.lf input:focus{border-color:var(--gold);}
+.lbtn{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--black);border:none;padding:.9rem;border-radius:6px;font-weight:800;font-size:.95rem;cursor:pointer;margin-top:.5rem;font-family:'DM Sans',sans-serif;}
+.lerr{color:var(--red);font-size:.8rem;text-align:center;margin-top:.5rem;display:none;}
+#app{display:none;}
+#app.show{display:flex;}
+.sidebar{width:240px;min-height:100vh;background:var(--black);border-right:1px solid var(--border);padding:1.5rem 0;flex-shrink:0;position:fixed;top:0;left:0;bottom:0;overflow-y:auto;display:flex;flex-direction:column;}
+.sb-logo{padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.sb-logo .ni{width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--black);margin-bottom:.5rem;}
+.sb-logo h3{font-family:'Playfair Display',serif;font-size:1rem;}
+.sb-logo small{font-size:.65rem;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;font-weight:700;display:block;margin-top:.2rem;}
+.sb-nav{list-style:none;padding:0 .75rem;flex:1;}
+.sb-nav li{margin-bottom:.2rem;}
+.sb-nav a{display:flex;align-items:center;gap:.7rem;padding:.7rem .85rem;border-radius:8px;text-decoration:none;color:var(--gray);font-size:.875rem;font-weight:500;transition:all .2s;cursor:pointer;}
+.sb-nav a:hover,.sb-nav a.act{background:rgba(232,81,10,.1);color:var(--gold);}
+.sb-nav .badge{margin-left:auto;background:var(--red);color:#fff;font-size:.62rem;font-weight:800;padding:.15rem .45rem;border-radius:100px;display:none;}
+.sb-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);margin-top:auto;}
+.sb-user{display:flex;align-items:center;gap:.7rem;padding:.6rem .85rem;border-radius:8px;margin-bottom:.3rem;}
+.sb-user .avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:var(--black);flex-shrink:0;}
+.sb-user .uinfo{flex:1;min-width:0;}
+.sb-user .uname{font-size:.8rem;font-weight:600;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-user .urole{font-size:.65rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;}
+.sb-footer a{display:flex;align-items:center;gap:.6rem;color:var(--gray);font-size:.82rem;text-decoration:none;padding:.55rem .85rem;border-radius:8px;transition:all .2s;cursor:pointer;}
+.sb-footer a:hover{background:rgba(224,56,56,.08);color:var(--red);}
+.main{margin-left:240px;flex:1;padding:2rem 2.5rem;min-height:100vh;}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+.page-header h1{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;}
+.page-header span{font-size:.8rem;color:var(--gray);}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.3rem;position:relative;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc,var(--gold));}
+.stat-card .sval{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);line-height:1;}
+.stat-card .slabel{font-size:.75rem;color:var(--gray);margin-top:.3rem;}
+.stat-card .sicon{position:absolute;top:1rem;right:1rem;font-size:1.5rem;opacity:.4;}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:1.5rem;overflow:hidden;}
+.section-head{padding:1.1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.section-head h3{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;}
+.section-head .acts{display:flex;gap:.6rem;}
+.sbtn{background:transparent;border:1px solid var(--border);color:var(--white);padding:.4rem .9rem;border-radius:6px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.sbtn:hover{border-color:var(--gold);color:var(--gold);}
+.sbtn.prim{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--black);border-color:var(--gold);}
+.sbtn:disabled{opacity:.5;cursor:not-allowed;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{padding:.75rem 1.2rem;text-align:left;font-size:.68rem;font-weight:700;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:.9rem 1.2rem;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.status{display:inline-flex;align-items:center;padding:.25rem .7rem;border-radius:100px;font-size:.7rem;font-weight:700;}
+.status.att{background:rgba(255,193,7,.12);color:#FFC107;}
+.status.conf{background:rgba(39,174,96,.12);color:var(--green);}
+.status.ann{background:rgba(224,56,56,.12);color:var(--red);}
+.status.livr{background:rgba(59,130,246,.12);color:var(--blue);}
+.act-btns{display:flex;gap:.4rem;flex-wrap:wrap;}
+.act-btn{background:none;border:1px solid var(--border);padding:.3rem .65rem;border-radius:4px;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s;color:var(--white);text-decoration:none;display:inline-flex;align-items:center;}
+.act-btn.wa{background:#25D366;color:#fff;border-color:#25D366;}
+.act-btn.wa:hover{background:#1ebe5d;}
+.act-btn.conf{color:var(--green);border-color:var(--green);}
+.act-btn.conf:hover{background:var(--green);color:#fff;}
+.act-btn.ann{color:var(--red);border-color:var(--red);}
+.act-btn.ann:hover{background:var(--red);color:#fff;}
+.act-btn.del{color:var(--red);border-color:rgba(224,56,56,.3);}
+.act-btn.del:hover{background:var(--red);color:#fff;}
+.act-btn.edit{color:var(--gold);border-color:rgba(232,81,10,.3);}
+.act-btn.edit:hover{background:var(--gold);color:#000;}
+.cars-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;padding:1.2rem;}
+.ca-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s;}
+.ca-card:hover{border-color:rgba(232,81,10,.3);}
+.ca-img{height:160px;overflow:hidden;position:relative;}
+.ca-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s;}
+.ca-card:hover .ca-img img{transform:scale(1.04);}
+.ca-badge{position:absolute;top:8px;left:8px;background:var(--gold);color:var(--black);font-size:.6rem;font-weight:800;padding:.2rem .55rem;border-radius:100px;text-transform:uppercase;}
+.ca-badge.occ{background:var(--card);color:var(--gold);border:1px solid var(--gold);}
+.ca-photo-count{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.7);color:#fff;font-size:.6rem;padding:.15rem .45rem;border-radius:100px;}
+.ca-body{padding:1rem;}
+.ca-brand{font-size:.65rem;color:var(--gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;}
+.ca-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:.3rem;}
+.ca-loc{font-size:.7rem;color:var(--gray);margin-bottom:.4rem;}
+.ca-price{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--gold);}
+.ca-acts{display:flex;gap:.4rem;margin-top:.8rem;}
+.ca-acts .act-btn{flex:1;text-align:center;justify-content:center;padding:.45rem .5rem;}
+.add-form{padding:1.4rem 1.5rem;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fg{margin-bottom:1rem;}
+.fg label{display:block;font-size:.7rem;font-weight:700;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.35rem;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:.65rem .9rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select option{background:var(--card);}
+.fg textarea{resize:vertical;min-height:70px;}
+.pg{display:none;}.pg.act{display:block;}
+.fbar{display:flex;gap:.5rem;flex-wrap:wrap;padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
+.fbtn2{background:transparent;border:1px solid var(--border);color:var(--gray);padding:.35rem .9rem;border-radius:100px;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.fbtn2.on,.fbtn2:hover{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.search-bar{padding:1rem 1.5rem;border-bottom:1px solid var(--border);}
+.search-bar input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:.6rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;}
+.search-bar input:focus{border-color:var(--gold);}
+.conf-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:9000;align-items:center;justify-content:center;}
+.conf-ov.on{display:flex;}
+.conf-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;max-width:400px;width:90%;text-align:center;}
+.conf-box h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:.7rem;}
+.conf-box p{color:var(--gray);font-size:.875rem;margin-bottom:1.5rem;line-height:1.6;}
+.conf-btns{display:flex;gap:.75rem;}
+.conf-btns button{flex:1;padding:.75rem;border-radius:6px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.875rem;border:none;}
+.cb-cancel{background:rgba(255,255,255,.07);color:var(--white);}
+.cb-ok{background:var(--red);color:#fff;}
+#atoast{position:fixed;bottom:2rem;right:2rem;background:var(--card);border:1px solid var(--gold);border-radius:8px;padding:.8rem 1.2rem;font-size:.875rem;font-weight:600;z-index:9999;display:flex;align-items:center;gap:.5rem;transform:translateY(80px);opacity:0;transition:all .35s;max-width:320px;}
+#atoast.on{transform:translateY(0);opacity:1;}
+.upload-zone{border:2px dashed var(--border);border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02);}
+.upload-zone:hover{border-color:var(--gold);background:rgba(232,81,10,.03);}
+.photo-prev{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem;margin-bottom:.5rem;}
+.photo-thumb{position:relative;width:90px;height:64px;border-radius:6px;overflow:hidden;flex-shrink:0;}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb .main-label{position:absolute;bottom:2px;left:2px;font-size:.5rem;background:var(--gold);color:#000;padding:.1rem .3rem;border-radius:3px;font-weight:800;}
+.photo-thumb .rm{position:absolute;top:2px;right:2px;background:rgba(224,56,56,.9);color:#fff;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;font-size:.65rem;font-weight:800;line-height:18px;text-align:center;padding:0;}
+.upload-progress{margin-top:.5rem;font-size:.78rem;color:var(--gold);font-weight:600;}
+.tasks-check{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.5rem;}
+.tasks-check label{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--white);cursor:pointer;background:rgba(255,255,255,.04);border:1px solid var(--border);padding:.4rem .9rem;border-radius:100px;transition:all .2s;}
+.tasks-check label:hover{border-color:var(--gold);color:var(--gold);}
+.tasks-check input{accent-color:var(--gold);}
+.admin-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:.8rem;}
+.admin-card-head{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem;}
+.admin-avatar{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#000;flex-shrink:0;}
+.admin-name{font-weight:700;font-size:.95rem;}
+.admin-email{font-size:.75rem;color:var(--gray);}
+.role-badge{display:inline-flex;padding:.2rem .7rem;border-radius:100px;font-size:.68rem;font-weight:700;}
+.role-super{background:rgba(232,81,10,.15);color:var(--gold);}
+.role-manager{background:rgba(59,130,246,.12);color:var(--blue);}
+.role-viewer{background:rgba(39,174,96,.1);color:var(--green);}
+.role-full{background:rgba(232,81,10,.15);color:var(--gold);}
+.link-box{background:rgba(232,81,10,.07);border:1px solid rgba(232,81,10,.2);border-radius:8px;padding:.8rem 1rem;margin-top:.8rem;display:flex;align-items:center;gap:.6rem;}
+.link-box span{font-size:.72rem;color:var(--gold);word-break:break-all;flex:1;}
+.link-copy{background:var(--gold);color:#000;border:none;padding:.3rem .8rem;border-radius:4px;font-size:.7rem;font-weight:800;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+.spinner-sm{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:.4rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-state{text-align:center;padding:3rem;color:var(--gray);}
+.empty-state .ei{font-size:2.5rem;margin-bottom:.8rem;}
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{margin-left:0;padding:1rem 1.2rem;}
+  .stats{grid-template-columns:1fr 1fr;}
+  .frow{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="lni">VC</div>
+      <h2>Espace Administration</h2>
+      <p>Villageois Civilisé · Accès sécurisé</p>
+    </div>
+    <div class="lf"><label>Email</label><input type="email" id="laEmail" placeholder="votre@email.com"></div>
+    <div class="lf"><label>Mot de passe</label><input type="password" id="laPwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="lbtn" onclick="doLogin()" id="loginBtn">Se connecter</button>
+    <p class="lerr" id="laErr">Email ou mot de passe incorrect</p>
+    <p style="text-align:center;font-size:.72rem;color:var(--gray);margin-top:1rem;">← <a href="index.html" style="color:var(--gold);text-decoration:none;">Retour au site</a></p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="ni">VC</div>
+      <h3>Villageois Civilisé</h3>
+      <small id="adminRoleName">Admin</small>
+    </div>
+    <ul class="sb-nav">
+      <li><a class="act" onclick="showPage('dashboard',this)">📊 Dashboard</a></li>
+      <li><a onclick="showPage('orders',this)">📦 Commandes <span class="badge" id="sbBadge"></span></a></li>
+      <li><a onclick="showPage('cars',this)">🚗 Véhicules</a></li>
+      <li><a onclick="showPage('addcar',this)" id="navAddCar">➕ Ajouter véhicule</a></li>
+      <li><a onclick="showPage('clients',this)">👥 Clients</a></li>
+      <li><a onclick="showPage('temoignages',this)">💬 Témoignages</a></li>
+      <li id="navAdmins" style="display:none"><a onclick="showPage('admins',this)">🔑 Gestion admins</a></li>
+    </ul>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="avatar" id="adminAvatar">A</div>
+        <div class="uinfo">
+          <div class="uname" id="adminName">Admin</div>
+          <div class="urole" id="adminRole">—</div>
+        </div>
+      </div>
+      <a href="index.html" target="_blank">🌐 Voir le site</a>
+      <a onclick="doLogout()">🚪 Déconnexion</a>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="pg act" id="pgDashboard">
+      <div class="page-header">
+        <div><h1>Tableau de bord</h1><span id="dateStr"></span></div>
+        <button class="sbtn prim" onclick="showPage('addcar',document.getElementById('navAddCar'))">+ Ajouter véhicule</button>
+      </div>
+      <div class="stats">
+        <div class="stat-card" style="--acc:#E8510A" onclick="showPage('orders',document.querySelector('.sb-nav a:nth-child(2)'))">
+          <div class="sicon">📦</div><div class="sval" id="stTotal">0</div><div class="slabel">Total commandes</div>
+        </div>
+        <div class="stat-card" style="--acc:#FFC107" onclick="showPage('orders',document.querySelector('.sb-nav a:nth-child(2)'))">
+          <div class="sicon">⏳</div><div class="sval" id="stPending">0</div><div class="slabel">En attente</div>
+        </div>
+        <div class="stat-card" style="--acc:#27AE60" onclick="showPage('orders',document.querySelector('.sb-nav a:nth-child(2)'))">
+          <div class="sicon">✅</div><div class="sval" id="stConf">0</div><div class="slabel">Confirmées</div>
+        </div>
+        <div class="stat-card" style="--acc:#3B82F6" onclick="showPage('cars',document.querySelector('.sb-nav a:nth-child(3)'))">
+          <div class="sicon">🚗</div><div class="sval" id="stCars">0</div><div class="slabel">Véhicules en ligne</div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-head">
+          <h3>Dernières commandes</h3>
+          <button class="sbtn" onclick="showPage('orders',document.querySelector('.sb-nav a:nth-child(2)'))">Voir tout →</button>
+        </div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Réf</th><th>Client</th><th>Véhicule</th><th>Prix</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="dashTbody"><tr><td colspan="6" style="text-align:center;color:var(--gray);padding:2rem;">Chargement...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="pg" id="pgOrders">
+      <div class="page-header"><h1>Commandes</h1><button class="sbtn" onclick="exportOrders()">⬇️ Exporter CSV</button></div>
+      <div class="section">
+        <div class="fbar" id="orderFilter">
+          <button class="fbtn2 on" onclick="filterOrders('all',this)">Toutes</button>
+          <button class="fbtn2" onclick="filterOrders('En attente',this)">En attente</button>
+          <button class="fbtn2" onclick="filterOrders('Confirmée',this)">Confirmées</button>
+          <button class="fbtn2" onclick="filterOrders('Livrée',this)">Livrées</button>
+          <button class="fbtn2" onclick="filterOrders('Annulée',this)">Annulées</button>
+        </div>
+        <div class="search-bar"><input type="text" id="orderSearch" placeholder="🔍 Rechercher client, véhicule, téléphone..." oninput="renderOrders()"></div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Réf</th><th>Date</th><th>Client</th><th>Téléphone</th><th>Ville</th><th>Véhicule</th><th>Prix</th><th>Paiement</th><th>Statut</th><th>Actions</th></tr></thead>
+          <tbody id="ordersTbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARS -->
+    <div class="pg" id="pgCars">
+      <div class="page-header">
+        <h1>Véhicules en ligne</h1>
+        <button class="sbtn prim" onclick="showPage('addcar',document.getElementById('navAddCar'))">+ Ajouter</button>
+      </div>
+      <div class="section">
+        <div class="cars-admin" id="adminCarsGrid">
+          <div class="empty-state"><div class="spinner-sm"></div> Chargement...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD / EDIT CAR -->
+    <div class="pg" id="pgAddcar">
+      <div class="page-header"><h1 id="addCarTitle">Ajouter un véhicule</h1></div>
+      <div class="section">
+        <div class="add-form">
+          <div class="frow">
+            <div class="fg"><label>Marque *</label><input type="text" id="acBrand" placeholder="Toyota, Mercedes..."></div>
+            <div class="fg"><label>Modèle *</label><input type="text" id="acName" placeholder="Land Cruiser, GLE..."></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Catégorie</label>
+              <select id="acType"><option value="suv">SUV</option><option value="berline">Berline</option><option value="pickup">Pick-up</option><option value="autre">Autre</option></select>
+            </div>
+            <div class="fg"><label>État</label>
+              <select id="acCond"><option value="neuf">Neuf</option><option value="occasion">Occasion</option></select>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Année</label><input type="number" id="acYear" placeholder="2024" min="2000" max="2035"></div>
+            <div class="fg"><label>Kilométrage</label><input type="text" id="acKm" placeholder="0 km, 45 000 km..."></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Carburant</label>
+              <select id="acFuel"><option>Diesel</option><option>Essence</option><option>Hybride</option><option>Électrique</option></select>
+            </div>
+            <div class="fg"><label>Prix *</label><input type="text" id="acPrice" placeholder="$45,000"></div>
+          </div>
+          <div class="fg"><label>📍 Localisation</label><input type="text" id="acLocation" placeholder="Ex: Kinshasa, Gombe — Avenue Haut-Congo"></div>
+          <div class="fg">
+            <label>🖼️ Photos du véhicule</label>
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('acImgsInput').click()"
+              ondragover="event.preventDefault();this.style.borderColor='var(--gold)'"
+              ondragleave="this.style.borderColor='var(--border)'"
+              ondrop="handleDrop(event)">
+              <div style="font-size:2rem;margin-bottom:.5rem;">📂</div>
+              <p style="font-size:.85rem;color:var(--gray);">Cliquez ou glissez vos photos ici</p>
+              <p style="font-size:.72rem;color:var(--gray);margin-top:.3rem;">JPG, PNG, WEBP · Plusieurs fichiers acceptés</p>
+            </div>
+            <input type="file" id="acImgsInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+            <small style="color:var(--gray);font-size:.7rem;margin-top:.4rem;display:block;">La 1ère photo = photo principale visible sur le site.</small>
+          </div>
+          <div class="photo-prev" id="photoPreview"></div>
+          <div id="uploadProgress" class="upload-progress" style="display:none;">⏳ Upload des photos en cours...</div>
+          <div style="display:flex;gap:.7rem;margin-top:.5rem;">
+            <button class="sbtn prim" onclick="addCar()" id="publishBtn" style="padding:.7rem 2rem;">✅ Publier le véhicule</button>
+            <button class="sbtn" onclick="resetCarForm()">🔄 Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMOIGNAGES -->
+    <div class="pg" id="pgTemoignages">
+      <div class="page-header"><h1>Témoignages</h1><button class="sbtn prim" onclick="openAddTemo()">+ Ajouter</button></div>
+      <div class="section">
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Client</th><th>Ville</th><th>Note</th><th>Commentaire</th><th>Actions</th></tr></thead>
+          <tbody id="temoTbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMINS -->
+    <div class="pg" id="pgAdmins">
+      <div class="page-header"><h1>Gestion des admins</h1></div>
+
+      <!-- Liste admins -->
+      <div class="section" style="margin-bottom:1.5rem;">
+        <div class="section-head"><h3>Administrateurs actifs</h3><span id="adminCount" style="font-size:.78rem;color:var(--gray);"></span></div>
+        <div style="padding:1rem 1.5rem;" id="adminsListWrap">
+          <div class="empty-state"><div class="spinner-sm"></div></div>
+        </div>
+      </div>
+
+      <!-- Créer admin -->
+      <div class="section">
+        <div class="section-head"><h3 id="adminFormTitle">➕ Créer un administrateur</h3></div>
+        <div class="add-form">
+          <div class="frow">
+            <div class="fg"><label>Nom complet *</label><input type="text" id="newAdminName" placeholder="Jean Mutombo"></div>
+            <div class="fg"><label>Email *</label><input type="email" id="newAdminEmail" placeholder="jean@vc.com"></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label>Mot de passe *</label>
+              <div style="position:relative;">
+                <input type="password" id="newAdminPwd" placeholder="Minimum 6 caractères" style="padding-right:2.5rem;">
+                <button type="button" onclick="togglePwd()" style="position:absolute;right:.7rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gray);cursor:pointer;font-size:.85rem;" id="pwdToggleBtn">👁</button>
+              </div>
+            </div>
+            <div class="fg"><label>Rôle</label>
+              <select id="newAdminRole">
+                <option value="manager">Gestionnaire — commandes + véhicules</option>
+                <option value="viewer">Lecteur — consultation seulement</option>
+                <option value="full">Accès complet</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg">
+            <label>Tâches autorisées</label>
+            <div class="tasks-check">
+              <label><input type="checkbox" id="taskOrders" value="commandes"> 📦 Commandes</label>
+              <label><input type="checkbox" id="taskCars" value="vehicules"> 🚗 Véhicules</label>
+              <label><input type="checkbox" id="taskTemo" value="temoignages"> 💬 Témoignages</label>
+              <label><input type="checkbox" id="taskClients" value="clients"> 👥 Clients</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:.7rem;margin-top:.5rem;">
+            <button class="sbtn prim" onclick="saveAdmin()" style="padding:.7rem 2rem;">💾 Enregistrer</button>
+            <button class="sbtn" onclick="resetAdminForm()">✕ Annuler</button>
+          </div>
+          <!-- Lien généré -->
+          <div id="adminLinkBox" style="display:none;margin-top:1.2rem;">
+            <p style="font-size:.8rem;color:var(--gray);margin-bottom:.5rem;">🔗 Lien de connexion à envoyer à l'admin :</p>
+            <div class="link-box">
+              <span id="adminLinkUrl"></span>
+              <button class="link-copy" onclick="copyAdminLink()">Copier</button>
+            </div>
+            <p style="font-size:.75rem;color:var(--gray);margin-top:.5rem;">📧 Identifiants : <strong style="color:var(--white);" id="adminLinkCreds"></strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="pg" id="pgClients">
+      <div class="page-header"><h1>Clients</h1></div>
+      <div class="section">
+        <div class="tbl-wrap">
+          <table><thead><tr><th>Nom</th><th>Téléphone</th><th>Ville</th><th>Commandes</th><th>Actions</th></tr></thead>
+          <tbody id="clientsTbody"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TEMO MODAL -->
+<div class="conf-ov" id="temoModal">
+  <div class="conf-box" style="max-width:500px;text-align:left;">
+    <h3 id="temoModalTitle" style="margin-bottom:1.2rem;">Ajouter un témoignage</h3>
+    <div class="frow" style="margin-bottom:.8rem;">
+      <div class="fg" style="margin-bottom:0;"><label>Nom client</label><input id="temoName" type="text" placeholder="Jean Mutombo"></div>
+      <div class="fg" style="margin-bottom:0;"><label>Ville</label><input id="temoCity" type="text" placeholder="Kinshasa"></div>
+    </div>
+    <div class="fg"><label>Note</label>
+      <select id="temoStars">
+        <option value="5">★★★★★ Excellent</option><option value="4">★★★★☆ Très bien</option>
+        <option value="3">★★★☆☆ Bien</option><option value="2">★★☆☆☆ Passable</option><option value="1">★☆☆☆☆ Mauvais</option>
+      </select>
+    </div>
+    <div class="fg"><label>Commentaire</label><textarea id="temoText" rows="3" placeholder="Ce client a dit..."></textarea></div>
+    <div style="display:flex;gap:.75rem;">
+      <button onclick="document.getElementById('temoModal').classList.remove('on')" style="flex:1;padding:.75rem;border-radius:6px;font-weight:700;cursor:pointer;border:none;background:rgba(255,255,255,.07);color:var(--white);font-family:'DM Sans',sans-serif;">Annuler</button>
+      <button onclick="saveTemo()" style="flex:1;padding:.75rem;border-radius:6px;font-weight:700;cursor:pointer;border:none;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#000;font-family:'DM Sans',sans-serif;">💾 Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="conf-ov" id="confOv">
+  <div class="conf-box">
+    <h3 id="confTitle">Confirmer</h3>
+    <p id="confMsg">Êtes-vous sûr ?</p>
+    <div class="conf-btns">
+      <button class="cb-cancel" onclick="closeConf()">Annuler</button>
+      <button class="cb-ok" id="confOk">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<div id="atoast"><span id="atoastMsg"></span></div>
+
+<script>
+// ══════════════════════════════════════════
+// SUPABASE CONFIG
+// ══════════════════════════════════════════
+const SB_URL = 'https://pxlcffmiuwlsvfzcvvtu.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4bGNmZm1pdXdsc3ZmemN2dnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4ODE4NjUsImV4cCI6MjA5MTQ1Nzg2NX0.m0TVDyfUIgarf4ElSEbZ_WBIZDzddb4ugSvOKxHrkaI';
+const HDR = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json'
+};
+
+const WA1 = '243898446173';
+const OWNER_EMAIL = 'samumpasi37@gmail.com';
+// Les mots de passe sont vérifiés côté serveur (Edge Function) — rien en clair ici
+const LOGIN_FN_URL = `${SB_URL}/functions/v1/smart-endpoint`;
+
+// ── ÉTAT
+let currentAdmin = null;
+let ORDERS = [];
+let CARS = [];
+let TEMOS = [];
+let orderFilterActive = 'all';
+let confCallback = null;
+let editCarId = null;
+let editTemoId = null;
+let uploadedPhotos = [];
+
+// ══════════════════════════════════════════
+// SUPABASE HELPERS
+// ══════════════════════════════════════════
+async function sbGet(table, q = '') {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${table}?${q}`, { headers: HDR });
+    if (!r.ok) { console.error('GET', table, await r.text()); return []; }
+    return await r.json();
+  } catch(e) { console.error('sbGet', e); return []; }
+}
+
+async function sbPost(table, body) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: { ...HDR, 'Prefer': 'return=representation' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { console.error('POST', table, await r.text()); return null; }
+    const data = await r.json();
+    return Array.isArray(data) ? data[0] : data;
+  } catch(e) { console.error('sbPost', e); return null; }
+}
+
+async function sbPatch(table, id, body) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { ...HDR, 'Prefer': 'return=minimal' },
+      body: JSON.stringify(body)
+    });
+    if (!r.ok) { console.error('PATCH', table, id, await r.text()); return false; }
+    return true;
+  } catch(e) { console.error('sbPatch', e); return false; }
+}
+
+async function sbDelete(table, id) {
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/${table}?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { ...HDR, 'Prefer': 'return=minimal' }
+    });
+    if (!r.ok) { console.error('DELETE', table, id, await r.text()); return false; }
+    return true;
+  } catch(e) { console.error('sbDelete', e); return false; }
+}
+
+// Upload photo → Supabase Storage
+async function uploadPhoto(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  const fname = `car_${Date.now()}_${Math.random().toString(36).substring(2,7)}.${ext}`;
+  const r = await fetch(`${SB_URL}/storage/v1/object/cars-photos/${fname}`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': file.type },
+    body: file
+  });
+  if (!r.ok) { const e = await r.text(); throw new Error('Upload failed: ' + e); }
+  return `${SB_URL}/storage/v1/object/public/cars-photos/${fname}`;
+}
+
+// ══════════════════════════════════════════
+// AUTHENTIFICATION
+// ══════════════════════════════════════════
+async function doLogin() {
+  const email = document.getElementById('laEmail').value.trim().toLowerCase();
+  const pwd   = document.getElementById('laPwd').value;
+  const errEl = document.getElementById('laErr');
+  const btn   = document.getElementById('loginBtn');
+  errEl.style.display = 'none';
+  btn.textContent = '⏳ Connexion...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(LOGIN_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
+      body: JSON.stringify({ email, pwd })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      currentAdmin = data.admin;
+      sessionStorage.setItem('vc_admin', JSON.stringify({ email: data.admin.email, token: data.admin.token }));
+      showApp();
+    } else {
+      errEl.style.display = 'block';
+      btn.textContent = 'Se connecter';
+      btn.disabled = false;
+    }
+  } catch(e) {
+    errEl.textContent = 'Erreur réseau, vérifiez votre connexion';
+    errEl.style.display = 'block';
+    btn.textContent = 'Se connecter';
+    btn.disabled = false;
+  }
+}
+
+function showApp() {
+  document.getElementById('loginScreen').classList.add('hide');
+  document.getElementById('app').classList.add('show');
+  // Infos admin dans sidebar
+  const initials = (currentAdmin.name || 'A').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  document.getElementById('adminAvatar').textContent = initials;
+  document.getElementById('adminName').textContent = currentAdmin.name || currentAdmin.email;
+  document.getElementById('adminRole').textContent = currentAdmin.role === 'super' ? '⭐ Super Admin' : currentAdmin.role;
+  document.getElementById('adminRoleName').textContent = currentAdmin.role;
+  document.getElementById('dateStr').textContent = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Afficher gestion admins seulement pour super admin
+  if (currentAdmin.role === 'super') {
+    document.getElementById('navAdmins').style.display = 'block';
+  }
+
+  // Masquer les pages non autorisées selon les tâches
+  applyTaskRestrictions();
+  initDashboard();
+}
+
+function applyTaskRestrictions() {
+  if (currentAdmin.role === 'super' || currentAdmin.role === 'full') return;
+  const tasks = currentAdmin.tasks || [];
+  // Si pas de tâches spécifiques = accès à tout (rôle manager)
+  if (!tasks.length) return;
+}
+
+function doLogout() {
+  openConf('Déconnexion', 'Voulez-vous vous déconnecter ?', () => {
+    sessionStorage.removeItem('vc_admin');
+    location.reload();
+  });
+}
+
+// ══════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════
+async function initDashboard() {
+  ORDERS = await sbGet('orders', 'order=created_at.desc');
+  CARS   = await sbGet('cars', 'order=created_at.asc');
+  const pending = ORDERS.filter(o => o.statut === 'En attente').length;
+  document.getElementById('stTotal').textContent   = ORDERS.length;
+  document.getElementById('stPending').textContent  = pending;
+  document.getElementById('stConf').textContent     = ORDERS.filter(o => o.statut === 'Confirmée').length;
+  document.getElementById('stCars').textContent     = CARS.length;
+  const badge = document.getElementById('sbBadge');
+  if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
+  else { badge.style.display = 'none'; }
+  const last5 = ORDERS.slice(0, 5);
+  document.getElementById('dashTbody').innerHTML = last5.length
+    ? last5.map(o => orderRow(o, true)).join('')
+    : '<tr><td colspan="6" style="text-align:center;color:var(--gray);padding:2rem;">Aucune commande pour l\'instant</td></tr>';
+}
+
+// ══════════════════════════════════════════
+// COMMANDES
+// ══════════════════════════════════════════
+async function renderOrders() {
+  ORDERS = await sbGet('orders', 'order=created_at.desc');
+  const q = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+  let list = [...ORDERS];
+  if (orderFilterActive !== 'all') list = list.filter(o => o.statut === orderFilterActive);
+  if (q) list = list.filter(o => ((o.client_prenom||'')+(o.client_nom||'')+(o.client_tel||'')+(o.voiture||'')).toLowerCase().includes(q));
+  document.getElementById('ordersTbody').innerHTML = list.length
+    ? list.map(o => orderRow(o, false)).join('')
+    : '<tr><td colspan="10" style="text-align:center;color:var(--gray);padding:2rem;">Aucune commande trouvée</td></tr>';
+  const pending = ORDERS.filter(o => o.statut === 'En attente').length;
+  const badge = document.getElementById('sbBadge');
+  if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline'; }
+  else { badge.style.display = 'none'; }
+}
+
+function filterOrders(f, btn) {
+  orderFilterActive = f;
+  document.querySelectorAll('#orderFilter .fbtn2').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderOrders();
+}
+
+function orderRow(o, compact) {
+  const sc = { 'En attente': 'att', 'Confirmée': 'conf', 'Annulée': 'ann', 'Livrée': 'livr' }[o.statut] || 'att';
+  const waMsg = `🚗 *Commande ${o.id}*\n\nBonjour ${o.client_prenom||''} !\nVotre commande pour *${o.voiture}* est ${o.statut==='Confirmée'?'✅ confirmée':'en cours de traitement'}.\n\nMerci — Villageois Civilisé`;
+  if (compact) return `<tr>
+    <td style="font-size:.7rem;color:var(--gold);font-weight:700;">${o.id||''}</td>
+    <td>${o.client_prenom||''} ${o.client_nom||''}</td>
+    <td>${o.voiture||''}</td><td style="color:var(--gold);">${o.prix||''}</td>
+    <td><span class="status ${sc}">${o.statut}</span></td>
+    <td><div class="act-btns">
+      <a class="act-btn wa" href="https://wa.me/${WA1}?text=${encodeURIComponent(waMsg)}" target="_blank">WA</a>
+      <button class="act-btn conf" onclick="changeStatus('${o.id}','Confirmée')">✓ Confirmer</button>
+    </div></td></tr>`;
+  return `<tr>
+    <td style="font-size:.7rem;color:var(--gold);font-weight:700;">${o.id||''}</td>
+    <td style="font-size:.78rem;">${o.date ? new Date(o.date).toLocaleDateString('fr-FR') : ''}</td>
+    <td>${o.client_prenom||''} ${o.client_nom||''}</td>
+    <td><a href="https://wa.me/${(o.client_tel||'').replace(/\D/g,'')}" target="_blank" style="color:var(--green);text-decoration:none;">${o.client_tel||''}</a></td>
+    <td>${o.client_ville||'—'}</td>
+    <td>${o.voiture||''}</td>
+    <td style="color:var(--gold);font-family:'Bebas Neue',sans-serif;">${o.prix||''}</td>
+    <td style="font-size:.78rem;">${o.paiement||''}</td>
+    <td><span class="status ${sc}">${o.statut}</span></td>
+    <td><div class="act-btns">
+      <a class="act-btn wa" href="https://wa.me/${WA1}?text=${encodeURIComponent(waMsg)}" target="_blank">WA</a>
+      <button class="act-btn conf" onclick="changeStatus('${o.id}','Confirmée')">✓</button>
+      <button class="act-btn" onclick="changeStatus('${o.id}','Livrée')" style="color:var(--blue);border-color:var(--blue);">🚚</button>
+      <button class="act-btn ann" onclick="changeStatus('${o.id}','Annulée')">✕</button>
+      <button class="act-btn del" onclick="deleteOrder('${o.id}')">🗑</button>
+    </div></td></tr>`;
+}
+
+async function changeStatus(id, status) {
+  const ok = await sbPatch('orders', id, { statut: status });
+  if (ok) { showToast(`✅ Commande ${status.toLowerCase()}`); renderOrders(); initDashboard(); }
+  else showToast('❌ Erreur lors de la mise à jour');
+}
+
+function deleteOrder(id) {
+  openConf('Supprimer la commande', 'Cette action est irréversible.', async () => {
+    const ok = await sbDelete('orders', id);
+    if (ok) { renderOrders(); initDashboard(); showToast('🗑 Commande supprimée'); }
+    else showToast('❌ Erreur lors de la suppression');
+  });
+}
+
+function exportOrders() {
+  if (!ORDERS.length) { showToast('⚠️ Aucune commande à exporter'); return; }
+  const h = ['ID','Date','Prénom','Nom','Téléphone','Ville','Véhicule','Prix','Paiement','Statut','Message'];
+  const rows = ORDERS.map(o => [o.id, o.date?new Date(o.date).toLocaleDateString('fr-FR'):'', o.client_prenom||'', o.client_nom||'', o.client_tel||'', o.client_ville||'', o.voiture||'', o.prix||'', o.paiement||'', o.statut||'', o.message||'']);
+  const csv = [h, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'commandes_vc_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('📥 CSV exporté avec succès');
+}
+
+// ══════════════════════════════════════════
+// VOITURES
+// ══════════════════════════════════════════
+async function renderAdminCars() {
+  const grid = document.getElementById('adminCarsGrid');
+  grid.innerHTML = '<div class="empty-state"><span class="spinner-sm"></span> Chargement...</div>';
+  CARS = await sbGet('cars', 'order=created_at.desc');
+  if (!CARS.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="ei">🚗</div><p>Aucun véhicule en ligne.<br><a href="#" onclick="showPage(\'addcar\',document.getElementById(\'navAddCar\'))" style="color:var(--gold);">Ajouter le premier véhicule</a></p></div>';
+    return;
+  }
+  grid.innerHTML = CARS.map(c => {
+    const imgs = Array.isArray(c.imgs) && c.imgs.length ? c.imgs : (c.img ? [c.img] : []);
+    const mainImg = imgs[0] || 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80';
+    return `<div class="ca-card">
+      <div class="ca-img">
+        <img src="${mainImg}" alt="${c.name}" loading="lazy">
+        <span class="ca-badge ${c.condition==='occasion'?'occ':''}">${c.condition==='neuf'?'Neuf':'Occasion'}</span>
+        ${imgs.length > 1 ? `<span class="ca-photo-count">📷 ${imgs.length}</span>` : ''}
+      </div>
+      <div class="ca-body">
+        <div class="ca-brand">${c.brand}</div>
+        <div class="ca-name">${c.name} ${c.year}</div>
+        ${c.location ? `<div class="ca-loc">📍 ${c.location}</div>` : ''}
+        <div class="ca-price">${c.price}</div>
+        <div class="ca-acts">
+          <button class="act-btn edit" onclick="editCar(${c.id})">✏️ Modifier</button>
+          <button class="act-btn del" onclick="deleteCar(${c.id})">🗑 Retirer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteCar(id) {
+  openConf('Retirer le véhicule', 'Ce véhicule sera retiré du catalogue. Continuer ?', async () => {
+    const ok = await sbDelete('cars', id);
+    if (ok) { renderAdminCars(); showToast('🗑 Véhicule retiré du catalogue'); }
+    else showToast('❌ Erreur lors de la suppression');
+  });
+}
+
+async function editCar(id) {
+  const c = CARS.find(x => x.id === id);
+  if (!c) { showToast('❌ Véhicule introuvable'); return; }
+  editCarId = id;
+  showPage('addcar', document.getElementById('navAddCar'));
+  document.getElementById('addCarTitle').textContent = '✏️ Modifier le véhicule';
+  document.getElementById('acBrand').value   = c.brand || '';
+  document.getElementById('acName').value    = c.name || '';
+  document.getElementById('acType').value    = c.type || 'suv';
+  document.getElementById('acCond').value    = c.condition || 'neuf';
+  document.getElementById('acYear').value    = c.year || '';
+  document.getElementById('acKm').value      = c.km || '';
+  document.getElementById('acFuel').value    = c.fuel || 'Diesel';
+  document.getElementById('acPrice').value   = c.price || '';
+  document.getElementById('acLocation').value= c.location || '';
+  const existingImgs = Array.isArray(c.imgs) && c.imgs.length ? c.imgs : (c.img ? [c.img] : []);
+  uploadedPhotos = existingImgs.map(url => ({ file: null, preview: url, url }));
+  renderPhotoPreview();
+}
+
+// ── UPLOAD PHOTOS
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = e => { uploadedPhotos.push({ file, preview: e.target.result, url: null }); renderPhotoPreview(); };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').style.borderColor = 'var(--border)';
+  handleFiles(e.dataTransfer.files);
+}
+
+function renderPhotoPreview() {
+  document.getElementById('photoPreview').innerHTML = uploadedPhotos.map((p, i) => `
+    <div class="photo-thumb" style="border:2px solid ${i===0?'var(--gold)':'var(--border)'};">
+      <img src="${p.preview}" alt="photo ${i+1}">
+      ${i === 0 ? '<span class="main-label">MAIN</span>' : ''}
+      <button class="rm" onclick="removePhoto(${i})">✕</button>
+    </div>`).join('');
+  const zone = document.getElementById('uploadZone');
+  if (uploadedPhotos.length) {
+    zone.innerHTML = `<div style="font-size:1.5rem;">✅</div><p style="font-size:.85rem;color:var(--gold);font-weight:700;">${uploadedPhotos.length} photo(s) chargée(s)</p><p style="font-size:.72rem;color:var(--gray);margin-top:.2rem;">Cliquez pour en ajouter d'autres</p>`;
+  }
+}
+
+function removePhoto(i) {
+  uploadedPhotos.splice(i, 1);
+  if (!uploadedPhotos.length) resetUploadZone();
+  else renderPhotoPreview();
+}
+
+function resetUploadZone() {
+  document.getElementById('uploadZone').innerHTML = '<div style="font-size:2rem;margin-bottom:.5rem;">📂</div><p style="font-size:.85rem;color:var(--gray);">Cliquez ou glissez vos photos ici</p><p style="font-size:.72rem;color:var(--gray);margin-top:.3rem;">JPG, PNG, WEBP · Plusieurs fichiers acceptés</p>';
+  document.getElementById('uploadZone').style.borderColor = 'var(--border)';
+}
+
+async function addCar() {
+  const brand    = document.getElementById('acBrand').value.trim();
+  const name     = document.getElementById('acName').value.trim();
+  const type     = document.getElementById('acType').value;
+  const condition= document.getElementById('acCond').value;
+  const year     = parseInt(document.getElementById('acYear').value) || 2024;
+  const km       = document.getElementById('acKm').value.trim() || '0';
+  const fuel     = document.getElementById('acFuel').value;
+  const price    = document.getElementById('acPrice').value.trim();
+  const location = document.getElementById('acLocation').value.trim();
+
+  if (!brand || !name || !price) { showToast('⚠️ Marque, modèle et prix sont requis'); return; }
+  if (!uploadedPhotos.length)    { showToast('⚠️ Ajoutez au moins une photo'); return; }
+
+  const btn  = document.getElementById('publishBtn');
+  const prog = document.getElementById('uploadProgress');
+  btn.disabled = true; btn.textContent = '⏳ Publication...';
+  prog.style.display = 'block';
+
+  try {
+    const imgUrls = [];
+    for (const p of uploadedPhotos) {
+      if (p.url) { imgUrls.push(p.url); }
+      else if (p.file) {
+        const url = await uploadPhoto(p.file);
+        imgUrls.push(url);
+      }
+    }
+    const carData = { brand, name, type, condition, year, km, fuel, price, location, imgs: imgUrls, img: imgUrls[0] };
+    if (editCarId) {
+      const ok = await sbPatch('cars', editCarId, carData);
+      if (ok) showToast('✅ Véhicule mis à jour !');
+      else { showToast('❌ Erreur lors de la mise à jour'); return; }
+    } else {
+      const res = await sbPost('cars', carData);
+      if (res) showToast('✅ Véhicule publié avec succès !');
+      else { showToast('❌ Erreur lors de la publication'); return; }
+    }
+    resetCarForm();
+    showPage('cars', document.querySelector('.sb-nav a:nth-child(3)'));
+  } catch(err) {
+    showToast('❌ Erreur : ' + err.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '✅ Publier le véhicule';
+    prog.style.display = 'none';
+  }
+}
+
+function resetCarForm() {
+  editCarId = null;
+  document.getElementById('addCarTitle').textContent = 'Ajouter un véhicule';
+  ['acBrand','acName','acYear','acKm','acPrice','acLocation'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('acType').value = 'suv';
+  document.getElementById('acCond').value = 'neuf';
+  document.getElementById('acFuel').value = 'Diesel';
+  uploadedPhotos = [];
+  document.getElementById('photoPreview').innerHTML = '';
+  document.getElementById('acImgsInput').value = '';
+  resetUploadZone();
+}
+
+// ══════════════════════════════════════════
+// CLIENTS
+// ══════════════════════════════════════════
+async function renderClients() {
+  ORDERS = await sbGet('orders', 'order=created_at.desc');
+  const map = {};
+  ORDERS.forEach(o => {
+    const key = o.client_tel || o.id;
+    if (!map[key]) map[key] = { prenom: o.client_prenom, nom: o.client_nom, tel: o.client_tel, ville: o.client_ville, count: 0 };
+    map[key].count++;
+  });
+  const clients = Object.values(map);
+  document.getElementById('clientsTbody').innerHTML = clients.length
+    ? clients.map(c => `<tr>
+        <td style="font-weight:600;">${c.prenom||''} ${c.nom||''}</td>
+        <td><a href="https://wa.me/${(c.tel||'').replace(/\D/g,'')}" target="_blank" style="color:var(--green);text-decoration:none;">${c.tel||'—'}</a></td>
+        <td>${c.ville||'—'}</td>
+        <td><span style="background:rgba(232,81,10,.1);color:var(--gold);padding:.2rem .7rem;border-radius:100px;font-size:.72rem;font-weight:700;">${c.count}</span></td>
+        <td><a class="act-btn wa" href="https://wa.me/${WA1}?text=${encodeURIComponent('Bonjour '+c.prenom+', nous vous contactons depuis Villageois Civilisé.')}" target="_blank">💬 WhatsApp</a></td>
+      </tr>`).join('')
+    : '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">Aucun client pour l\'instant</td></tr>';
+}
+
+// ══════════════════════════════════════════
+// TÉMOIGNAGES
+// ══════════════════════════════════════════
+async function renderTemoignages() {
+  TEMOS = await sbGet('temoignages', 'order=created_at.asc');
+  document.getElementById('temoTbody').innerHTML = TEMOS.length
+    ? TEMOS.map(t => `<tr>
+        <td style="font-weight:600;">${t.name}</td>
+        <td style="font-size:.78rem;color:var(--gray);">${t.city||''}</td>
+        <td style="color:var(--gold);">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</td>
+        <td style="font-size:.82rem;color:var(--gray);max-width:280px;">${(t.text||'').substring(0,80)}${(t.text||'').length>80?'…':''}</td>
+        <td><div class="act-btns">
+          <button class="act-btn edit" onclick="editTemo(${t.id})">✏️</button>
+          <button class="act-btn del" onclick="deleteTemo(${t.id})">🗑</button>
+        </div></td>
+      </tr>`).join('')
+    : '<tr><td colspan="5" style="text-align:center;color:var(--gray);padding:2rem;">Aucun témoignage pour l\'instant</td></tr>';
+}
+
+function openAddTemo() {
+  editTemoId = null;
+  document.getElementById('temoModalTitle').textContent = 'Ajouter un témoignage';
+  ['temoName','temoCity','temoText'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('temoStars').value = '5';
+  document.getElementById('temoModal').classList.add('on');
+}
+
+function editTemo(id) {
+  const t = TEMOS.find(x => x.id === id); if (!t) return;
+  editTemoId = id;
+  document.getElementById('temoModalTitle').textContent = 'Modifier le témoignage';
+  document.getElementById('temoName').value  = t.name;
+  document.getElementById('temoCity').value  = t.city || '';
+  document.getElementById('temoStars').value = t.stars;
+  document.getElementById('temoText').value  = t.text;
+  document.getElementById('temoModal').classList.add('on');
+}
+
+async function saveTemo() {
+  const name  = document.getElementById('temoName').value.trim();
+  const city  = document.getElementById('temoCity').value.trim();
+  const stars = parseInt(document.getElementById('temoStars').value) || 5;
+  const text  = document.getElementById('temoText').value.trim();
+  if (!name || !text) { showToast('⚠️ Nom et commentaire requis'); return; }
+  let ok;
+  if (editTemoId) { ok = await sbPatch('temoignages', editTemoId, { name, city, stars, text }); }
+  else            { ok = await sbPost('temoignages', { name, city, stars, text }); }
+  if (ok) {
+    document.getElementById('temoModal').classList.remove('on');
+    renderTemoignages();
+    showToast(editTemoId ? '✅ Témoignage modifié' : '✅ Témoignage ajouté');
+  } else showToast('❌ Erreur lors de l\'enregistrement');
+}
+
+function deleteTemo(id) {
+  openConf('Supprimer le témoignage', 'Supprimer définitivement ce commentaire ?', async () => {
+    const ok = await sbDelete('temoignages', id);
+    if (ok) { renderTemoignages(); showToast('🗑 Témoignage supprimé'); }
+    else showToast('❌ Erreur lors de la suppression');
+  });
+}
+
+// ══════════════════════════════════════════
+// GESTION DES ADMINS (super admin seulement)
+// ══════════════════════════════════════════
+async function renderAdmins() {
+  const wrap = document.getElementById('adminsListWrap');
+  wrap.innerHTML = '<div class="empty-state"><span class="spinner-sm"></span> Chargement...</div>';
+  const admins = await sbGet('admins', 'order=created_at.asc');
+  document.getElementById('adminCount').textContent = `${admins.length} admin(s) créé(s)`;
+  const baseUrl = window.location.href.split('?')[0];
+
+  const allDisplay = [
+    { name: 'Sa Mumpasi', email: OWNER_EMAIL, role: 'super', tasks: [], _system: true }
+  , ...admins];
+
+  if (!admins.length) {
+    wrap.innerHTML = `<div style="padding:1rem;">
+      <div class="admin-card">
+        <div class="admin-card-head">
+          <div class="admin-avatar">SM</div>
+          <div><div class="admin-name">Sa Mumpasi</div><div class="admin-email">${OWNER_EMAIL}</div></div>
+          <span class="role-badge role-super" style="margin-left:auto;">⭐ Propriétaire</span>
+        </div>
+        <p style="font-size:.78rem;color:var(--gray);">Aucun admin secondaire créé pour l'instant.</p>
+      </div>
+    </div>`;
+    return;
+  }
+
+  wrap.innerHTML = `<div style="padding:.5rem 0;">` + allDisplay.map(a => {
+    const ini = (a.name||'A').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+    const roleClass = { super:'role-super', manager:'role-manager', viewer:'role-viewer', full:'role-full' }[a.role] || 'role-manager';
+    const roleLabel = { super:'⭐ Propriétaire', manager:'Gestionnaire', viewer:'Lecteur', full:'Accès complet' }[a.role] || a.role;
+    const link = a._system ? null : `${baseUrl}?token=${a.token}`;
+    const taskHtml = a._system ? 'Tous les droits'
+      : (a.tasks||[]).length ? (a.tasks||[]).map(t=>`<span style="background:rgba(232,81,10,.08);border:1px solid rgba(232,81,10,.2);color:var(--gold);padding:.1rem .5rem;border-radius:100px;font-size:.65rem;font-weight:700;">${t}</span>`).join(' ')
+      : '<span style="color:var(--gray);font-size:.78rem;">Tous</span>';
+    return `<div class="admin-card">
+      <div class="admin-card-head">
+        <div class="admin-avatar">${ini}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="admin-name">${a.name}</div>
+          <div class="admin-email">${a.email}</div>
+        </div>
+        <span class="role-badge ${roleClass}">${roleLabel}</span>
+      </div>
+      <div style="font-size:.78rem;color:var(--gray);margin-bottom:.6rem;">Tâches : ${taskHtml}</div>
+      ${link ? `<div class="link-box" style="margin-top:0;margin-bottom:.6rem;"><span>${link}</span><button class="link-copy" onclick="copyText('${link}')">Copier lien</button></div>` : ''}
+      ${!a._system ? `<div class="act-btns">
+        <button class="act-btn edit" onclick="prepEditAdmin(${a.id})">✏️ Modifier</button>
+        <button class="act-btn del" onclick="deleteAdmin(${a.id})">🗑 Supprimer</button>
+      </div>` : ''}
+    </div>`;
+  }).join('') + '</div>';
+}
+
+let editAdminId = null;
+
+async function prepEditAdmin(id) {
+  const admins = await sbGet('admins');
+  const a = admins.find(x => x.id === id);
+  if (!a) return;
+  editAdminId = id;
+  document.getElementById('adminFormTitle').textContent = '✏️ Modifier l\'admin';
+  document.getElementById('newAdminName').value  = a.name;
+  document.getElementById('newAdminEmail').value = a.email;
+  document.getElementById('newAdminPwd').value   = a.pwd;
+  document.getElementById('newAdminRole').value  = a.role;
+  ['taskOrders','taskCars','taskTemo','taskClients'].forEach(tid => {
+    document.getElementById(tid).checked = (a.tasks||[]).includes(document.getElementById(tid).value);
+  });
+  document.getElementById('adminLinkBox').style.display = 'none';
+  document.querySelector('#pgAdmins .section:last-child').scrollIntoView({ behavior:'smooth' });
+}
+
+async function saveAdmin() {
+  const name  = document.getElementById('newAdminName').value.trim();
+  const email = document.getElementById('newAdminEmail').value.trim();
+  const pwd   = document.getElementById('newAdminPwd').value.trim();
+  const role  = document.getElementById('newAdminRole').value;
+  if (!name || !email || !pwd) { showToast('⚠️ Nom, email et mot de passe requis'); return; }
+  if (pwd.length < 6)          { showToast('⚠️ Mot de passe minimum 6 caractères'); return; }
+
+  const tasks = ['taskOrders','taskCars','taskTemo','taskClients']
+    .filter(id => document.getElementById(id).checked)
+    .map(id => document.getElementById(id).value);
+
+  if (editAdminId) {
+    const ok = await sbPatch('admins', editAdminId, { name, email, pwd, role, tasks });
+    if (ok) { showToast('✅ Admin mis à jour'); resetAdminForm(); renderAdmins(); }
+    else showToast('❌ Erreur lors de la mise à jour');
+    return;
+  }
+
+  // Nouveau admin
+  const token = btoa(email + ':' + Date.now()).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
+  const res = await sbPost('admins', { name, email, pwd, role, tasks, token });
+  if (res) {
+    const link = `${window.location.href.split('?')[0]}?token=${token}`;
+    document.getElementById('adminLinkUrl').textContent  = link;
+    document.getElementById('adminLinkCreds').textContent = `${email} / ${pwd}`;
+    document.getElementById('adminLinkBox').style.display = 'block';
+    showToast('✅ Admin créé avec succès !');
+    resetAdminForm();
+    renderAdmins();
+  } else showToast('❌ Erreur lors de la création');
+}
+
+function resetAdminForm() {
+  editAdminId = null;
+  document.getElementById('adminFormTitle').textContent = '➕ Créer un administrateur';
+  ['newAdminName','newAdminEmail','newAdminPwd'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('newAdminRole').value = 'manager';
+  ['taskOrders','taskCars','taskTemo','taskClients'].forEach(id => document.getElementById(id).checked = false);
+}
+
+function copyAdminLink() { copyText(document.getElementById('adminLinkUrl').textContent); }
+
+function deleteAdmin(id) {
+  openConf('Supprimer l\'admin', 'Cet admin perdra immédiatement son accès. Continuer ?', async () => {
+    const ok = await sbDelete('admins', id);
+    if (ok) { renderAdmins(); showToast('🗑 Admin supprimé'); }
+    else showToast('❌ Erreur lors de la suppression');
+  });
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showPage(pg, el) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('act'));
+  const pid = 'pg' + pg.charAt(0).toUpperCase() + pg.slice(1);
+  const pageEl = document.getElementById(pid);
+  if (pageEl) pageEl.classList.add('act');
+  document.querySelectorAll('.sb-nav a').forEach(a => a.classList.remove('act'));
+  if (el) el.classList.add('act');
+  if (pg === 'dashboard')   initDashboard();
+  if (pg === 'orders')      renderOrders();
+  if (pg === 'cars')        renderAdminCars();
+  if (pg === 'clients')     renderClients();
+  if (pg === 'temoignages') renderTemoignages();
+  if (pg === 'admins')      renderAdmins();
+  if (pg === 'addcar' && !editCarId) resetCarForm();
+}
+
+// ══════════════════════════════════════════
+// UTILITAIRES
+// ══════════════════════════════════════════
+function openConf(title, msg, cb) {
+  document.getElementById('confTitle').textContent = title;
+  document.getElementById('confMsg').textContent   = msg;
+  confCallback = cb;
+  document.getElementById('confOv').classList.add('on');
+}
+function closeConf() { document.getElementById('confOv').classList.remove('on'); confCallback = null; }
+document.getElementById('confOk').onclick = () => { if (confCallback) confCallback(); closeConf(); };
+
+function showToast(msg, dur = 3500) {
+  const t = document.getElementById('atoast');
+  document.getElementById('atoastMsg').textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), dur);
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt)
+    .then(() => showToast('✅ Copié dans le presse-papiers !'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = txt; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); document.body.removeChild(ta);
+      showToast('✅ Copié !');
+    });
+}
+
+function togglePwd() {
+  const inp = document.getElementById('newAdminPwd');
+  const btn = document.getElementById('pwdToggleBtn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁'; }
+}
+
+// ══════════════════════════════════════════
+// INITIALISATION
+// ══════════════════════════════════════════
+window.onload = async () => {
+  // 1. Vérifier token dans URL
+  const urlToken = new URLSearchParams(window.location.search).get('token');
+  if (urlToken) {
+    if (urlToken === 'owner') {
+      currentAdmin = { email: OWNER_EMAIL, name: 'Sa Mumpasi', role: 'super', tasks: [], token: 'owner' };
+      sessionStorage.setItem('vc_admin', JSON.stringify({ email: OWNER_EMAIL, token: 'owner' }));
+      showApp(); return;
+    }
+    const admins = await sbGet('admins', `token=eq.${urlToken}`);
+    if (admins.length) {
+      currentAdmin = admins[0];
+      sessionStorage.setItem('vc_admin', JSON.stringify({ email: admins[0].email, token: admins[0].token }));
+      showApp(); return;
+    }
+  }
+
+  // 2. Vérifier session existante
+  const sess = sessionStorage.getItem('vc_admin');
+  if (sess) {
+    try {
+      const s = JSON.parse(sess);
+      if (s.token === 'owner') {
+        currentAdmin = { email: OWNER_EMAIL, name: 'Sa Mumpasi', role: 'super', tasks: [], token: 'owner' };
+        showApp(); return;
+      }
+      const admins = await sbGet('admins', `email=eq.${encodeURIComponent(s.email)}&token=eq.${s.token}`);
+      if (admins.length) { currentAdmin = admins[0]; showApp(); return; }
+    } catch(e) {}
+  }
+
+  // 3. Afficher écran de connexion
+  document.getElementById('loginBtn').textContent = 'Se connecter';
+  document.getElementById('loginBtn').disabled = false;
+};
+</script>
+</body>
+</html>
