@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Villageois Civilisé — Véhicules Neufs & Occasion</title>
+<meta name="description" content="Achetez vos véhicules neufs et d'occasion chez Villageois Civilisé. Qualité, confiance et livraison en RDC.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#E8510A;--gold-light:#FF7A3D;--black:#080808;--dark:#0F1117;--card:#161A22;--border:rgba(232,81,10,0.15);--white:#F5F0E8;--gray:#7A8090;--red:#E03838;--green:#27AE60;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden;}
+#cur{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s;mix-blend-mode:difference;}
+#cur.big{width:36px;height:36px;opacity:.5;}
+@media(hover:none),(pointer:coarse){#cur{display:none;}body{cursor:auto;}}
+#loader{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;z-index:10000;flex-direction:column;gap:1.2rem;transition:opacity .7s;}
+#loader.out{opacity:0;pointer-events:none;}
+.ld-logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,8vw,5rem);letter-spacing:.15em;color:var(--gold);}
+.ld-bar{width:200px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.ld-bar-inner{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:2px;animation:ldbar 1.4s ease forwards;}
+@keyframes ldbar{from{width:0}to{width:100%}}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1.2rem 4rem;display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,8,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:padding .3s;}
+nav.sm{padding:.8rem 4rem;}
+.nl{display:flex;align-items:center;gap:.7rem;text-decoration:none;}
+.ni{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold-light));border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--black);}
+.nt{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);line-height:1.1;}
+.nt span{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--gold);font-family:'DM Sans',sans-serif;font-weight:700;text-transform:uppercase;}
+.nlinks{display:flex;align-items:center;gap:2rem;list-style:none;}
+.nlinks a{color:var(--gray);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .2s;}
+.nlinks a:hover,.nlinks a.act{color:var(--gold);}
+.hbg{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hbg span{width:24px;height:2px;background:var(--white);display:block;}
+.mob-nav{display:none;position:fixed;inset:0;background:var(--black);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;}
+.mob-nav.on{display:flex;}
+.mob-nav a{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--white);text-decoration:none;}
+.mob-nav a:hover{color:var(--gold);}
+.mob-x{position:absolute;top:1.5rem;left:1.5rem;font-size:1rem;color:var(--white);cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:.5rem 1rem;font-family:'DM Sans',sans-serif;font-weight:600;}
+#hero{min-height:100vh;background:linear-gradient(160deg,rgba(8,8,8,.95) 55%,rgba(232,81,10,.07) 100%),url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1800&q=80') center/cover no-repeat;display:flex;align-items:center;padding:7rem 4rem 5rem;position:relative;overflow:hidden;}
+#hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:130px;background:linear-gradient(transparent,var(--black));}
+.hbadge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(232,81,10,.1);border:1px solid var(--border);padding:.35rem .9rem;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;animation:fu .8s both;}
+.htitle{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:900;line-height:1.05;margin-bottom:1.4rem;animation:fu .8s .15s both;}
+.htitle em{font-style:italic;color:var(--gold);}
+.hsub{font-size:1.05rem;color:var(--gray);max-width:520px;line-height:1.85;margin-bottom:2.5rem;animation:fu .8s .3s both;}
+.hbtns{display:flex;gap:1rem;flex-wrap:wrap;animation:fu .8s .45s both;}
+.btn1{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--black);border:none;padding:.9rem 2.2rem;border-radius:5px;font-weight:700;font-size:.95rem;cursor:pointer;transition:transform .2s,box-shadow .2s;text-decoration:none;display:inline-block;}
+.btn1:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(232,81,10,.4);}
+.btn2{background:transparent;color:var(--white);border:1px solid rgba(245,240,232,.2);padding:.9rem 2.2rem;border-radius:5px;font-weight:500;font-size:.95rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block;}
+.btn2:hover{border-color:var(--gold);color:var(--gold);}
+.hstats{position:absolute;bottom:5rem;right:4rem;display:flex;gap:2.5rem;animation:fu .8s .6s both;}
+.hst{text-align:center;}
+.hst-n{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;color:var(--gold);line-height:1;}
+.hst-l{font-size:.68rem;color:var(--gray);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem;}
+@keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.mq{background:linear-gradient(90deg,var(--gold),var(--gold-light),var(--gold));padding:.85rem 0;overflow:hidden;}
+.mq-t{display:flex;gap:3rem;width:max-content;animation:mq 22s linear infinite;}
+.mq-t span{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.15em;color:var(--black);white-space:nowrap;display:flex;align-items:center;gap:1rem;}
+.mq-t span::after{content:'◆';opacity:.4;}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#catalogue{padding:6rem 4rem;background:var(--dark);}
+.sec-tag{font-size:.7rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem;}
+.sec-tag::before{content:'';width:22px;height:2px;background:var(--gold);}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:.8rem;}
+.sec-title em{font-style:italic;color:var(--gold);}
+.sec-sub{color:var(--gray);font-size:.95rem;line-height:1.8;max-width:520px;margin-bottom:2.5rem;}
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.fbtn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:.45rem 1.1rem;border-radius:100px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.fbtn.on,.fbtn:hover{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.cars{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.4rem;}
+.car{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.car:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.5);}
+.cimg{position:relative;height:210px;overflow:hidden;}
+.cimg-slider{display:flex;height:100%;transition:transform .4s ease;}
+.cimg-slider img{min-width:100%;height:100%;object-fit:cover;flex-shrink:0;}
+.cimg-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:30px;height:30px;font-size:.95rem;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;}
+.cimg-arrow.left{left:6px;}
+.cimg-arrow.right{right:6px;}
+.car:hover .cimg-arrow{opacity:1;}
+.cimg-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:5;}
+.cimg-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);transition:background .2s;}
+.cimg-dots span.act{background:var(--gold);}
+.cbadge{position:absolute;top:12px;left:12px;background:var(--gold);color:var(--black);font-size:.62rem;font-weight:800;letter-spacing:.1em;padding:.22rem .65rem;border-radius:100px;text-transform:uppercase;}
+.cbadge.occ{background:var(--card);color:var(--gold);border:1px solid var(--gold);}
+.clike{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:rgba(8,8,8,.75);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border);transition:all .25s;font-size:1rem;}
+.clike.liked{background:var(--red);border-color:var(--red);}
+.cbody{padding:1.2rem 1.3rem;}
+.cbrand{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.25rem;}
+.cname{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;margin-bottom:.75rem;}
+.cspecs{display:flex;gap:.9rem;margin-bottom:1.1rem;flex-wrap:wrap;}
+.csp{font-size:.73rem;color:var(--gray);display:flex;align-items:center;gap:.3rem;}
+.csp b{color:var(--white);font-weight:600;}
+.cfoot{display:flex;align-items:center;justify-content:space-between;padding-top:.9rem;border-top:1px solid var(--border);}
+.cprice{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;color:var(--gold);letter-spacing:.05em;}
+.cprice small{font-family:'DM Sans',sans-serif;font-size:.62rem;color:var(--gray);display:block;font-weight:500;}
+.cbtns{display:flex;gap:.5rem;align-items:center;}
+.cwha{display:flex;align-items:center;gap:.35rem;background:#25D366;color:#fff;border:none;padding:.45rem .9rem;border-radius:4px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;text-decoration:none;}
+.cwha:hover{background:#1ebe5d;}
+.corder{background:transparent;border:1px solid var(--gold);color:var(--gold);padding:.45rem .85rem;border-radius:4px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.corder:hover{background:var(--gold);color:var(--black);}
+#pourquoi{padding:6rem 4rem;position:relative;overflow:hidden;}
+#pourquoi::before{content:'VC';position:absolute;right:-2rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:18rem;color:rgba(232,81,10,.03);line-height:1;pointer-events:none;}
+.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:1.5rem;}
+.wcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.7rem;transition:border-color .3s;}
+.wcard:hover{border-color:var(--gold);}
+.wicon{font-size:2rem;margin-bottom:.9rem;}
+.wtitle{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:.4rem;}
+.wdesc{font-size:.85rem;color:var(--gray);line-height:1.75;}
+#temoignages{padding:6rem 4rem;background:var(--dark);}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.3rem;}
+.tcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.7rem;position:relative;}
+.tcard::before{content:'"';font-family:'Playfair Display',serif;font-size:5rem;color:var(--gold);opacity:.12;position:absolute;top:.3rem;right:1.3rem;line-height:1;}
+.tstars{color:var(--gold);font-size:.78rem;margin-bottom:.7rem;}
+.ttxt{font-size:.875rem;color:var(--gray);line-height:1.8;margin-bottom:1.1rem;font-style:italic;}
+.tauth{display:flex;align-items:center;gap:.75rem;}
+.tavt{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--black);font-size:.85rem;}
+.tname{font-weight:600;font-size:.85rem;}
+.tcity{font-size:.7rem;color:var(--gray);margin-top:.1rem;}
+#contact{padding:6rem 4rem;background:var(--black);}
+.cgrid{display:grid;grid-template-columns:1fr 1.2fr;gap:4rem;align-items:start;}
+.cinfo h3{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;margin-bottom:1rem;}
+.cinfo p{color:var(--gray);font-size:.9rem;line-height:1.8;margin-bottom:2rem;}
+.citems{display:flex;flex-direction:column;gap:.9rem;}
+.ci{display:flex;align-items:center;gap:.8rem;}
+.ciicon{width:38px;height:38px;border-radius:8px;background:rgba(232,81,10,.09);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.95rem;}
+.cilabel{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.cival{font-size:.875rem;color:var(--white);margin-top:.1rem;}
+.socials{display:flex;gap:.75rem;margin-top:2rem;flex-wrap:wrap;}
+.soc{display:flex;align-items:center;gap:.45rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:.55rem .9rem;text-decoration:none;color:var(--white);font-size:.78rem;font-weight:600;transition:all .2s;}
+.soc:hover{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.cform{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;}
+.cform h4{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;margin-bottom:1.4rem;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fg{margin-bottom:1.1rem;}
+.fg label{display:block;font-size:.72rem;font-weight:700;color:var(--gray);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem;}
+.fg input,.fg select,.fg textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:6px;padding:.7rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--gold);}
+.fg select option{background:var(--card);}
+.fg textarea{resize:vertical;min-height:80px;}
+.fsub{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--black);border:none;padding:.9rem;border-radius:6px;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;margin-top:.3rem;}
+.fsub:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(232,81,10,.35);}
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(12px);z-index:5000;align-items:center;justify-content:center;padding:1rem;}
+.ov.on{display:flex;}
+.om{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:550px;max-height:90vh;overflow-y:auto;animation:mi .35s ease;}
+@keyframes mi{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.omh{padding:1.7rem 2rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.omh h3{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;}
+.omx{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.07);border:none;color:var(--white);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.omb{padding:1.7rem 2rem;}
+.ocar{background:rgba(232,81,10,.07);border:1px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:.9rem;}
+.ocar img{width:75px;height:52px;object-fit:cover;border-radius:6px;}
+.ocar .oname{font-weight:700;font-size:.95rem;}
+.ocar .oprice{color:var(--gold);font-family:'Bebas Neue';font-size:1.15rem;}
+.osub{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--black);border:none;padding:.9rem;border-radius:6px;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;margin-top:.3rem;}
+.sbox{display:none;text-align:center;padding:2rem 1rem;}
+.sbox.show{display:block;}
+.sbox .si{font-size:3.5rem;margin-bottom:1rem;}
+.sbox h3{font-family:'Playfair Display',serif;font-size:1.45rem;margin-bottom:.6rem;}
+.sbox p{color:var(--gray);font-size:.875rem;line-height:1.7;}
+footer{background:var(--black);padding:3rem 4rem 1.5rem;border-top:1px solid var(--border);}
+.fgrid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:3rem;margin-bottom:2rem;}
+.fbrand p{color:var(--gray);font-size:.85rem;line-height:1.85;margin-top:.8rem;max-width:270px;}
+.fcol h4{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.55rem;}
+.fcol a{color:var(--gray);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fcol a:hover{color:var(--white);}
+.fbot{border-top:1px solid var(--border);padding-top:1.3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.fbot p{font-size:.75rem;color:var(--gray);}
+.fbot strong{color:var(--gold);}
+#toast{position:fixed;bottom:2rem;right:2rem;background:var(--card);border:1px solid var(--gold);border-radius:8px;padding:.85rem 1.3rem;font-size:.875rem;font-weight:600;z-index:9000;display:flex;align-items:center;gap:.6rem;transform:translateY(80px);opacity:0;transition:all .35s;}
+#toast.show{transform:translateY(0);opacity:1;}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .6s,transform .6s;}
+.rv.vis{opacity:1;transform:translateY(0);}
+.spinner-wrap{text-align:center;padding:3rem;color:var(--gray);}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1rem;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}nav.sm{padding:.7rem 1.5rem;}
+  .nlinks{display:none;}.hbg{display:flex;}
+  #hero{padding:6rem 1.5rem 4rem;}
+  .hstats{right:1.5rem;bottom:3rem;gap:1.5rem;}
+  #catalogue,#pourquoi,#temoignages,#contact{padding:4rem 1.5rem;}
+  .why-grid{grid-template-columns:1fr;}
+  .cgrid{grid-template-columns:1fr;gap:2rem;}
+  .fgrid{grid-template-columns:1fr 1fr;gap:2rem;}
+  footer{padding:2.5rem 1.5rem 1.5rem;}
+  .fbot{flex-direction:column;text-align:center;}
+}
+@media(max-width:600px){
+  .frow{grid-template-columns:1fr;}.hstats{display:none;}
+  .fgrid{grid-template-columns:1fr;}
+  .cbtns{flex-direction:column;align-items:flex-end;gap:.4rem;}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="loader"><div class="ld-logo">VILLAGEOIS CIVILISÉ</div><div class="ld-bar"><div class="ld-bar-inner"></div></div></div>
+<div class="mob-nav" id="mobNav">
+  <button class="mob-x" onclick="closeMob()">← Retour</button>
+  <a href="#hero" onclick="closeMob()">Accueil</a>
+  <a href="#catalogue" onclick="closeMob()">Catalogue</a>
+  <a href="#temoignages" onclick="closeMob()">Témoignages</a>
+  <a href="#contact" onclick="closeMob()">Contact</a>
+</div>
+<nav id="nav">
+  <a class="nl" href="#hero"><div class="ni">VC</div><div class="nt">Villageois Civilisé <span>Véhicules · RDC</span></div></a>
+  <ul class="nlinks">
+    <li><a href="#hero" class="act">Accueil</a></li>
+    <li><a href="#catalogue">Catalogue</a></li>
+    <li><a href="#pourquoi">Pourquoi nous</a></li>
+    <li><a href="#temoignages">Témoignages</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hbg" onclick="document.getElementById('mobNav').classList.add('on')"><span></span><span></span><span></span></button>
+</nav>
+<section id="hero">
+  <div>
+    <div class="hbadge">🚗 Kinshasa, RDC · Qualité Garantie</div>
+    <h1 class="htitle">Trouvez votre <em>véhicule idéal</em><br>au meilleur prix</h1>
+    <p class="hsub">Neufs ou d'occasion, nous vous offrons une sélection premium de véhicules avec garantie qualité. Commandez en ligne, notre équipe vous contacte rapidement.</p>
+    <div class="hbtns"><a href="#catalogue" class="btn1">Voir le catalogue</a><a href="#contact" class="btn2">Nous contacter</a></div>
+  </div>
+  <div class="hstats">
+    <div class="hst"><div class="hst-n">120+</div><div class="hst-l">Véhicules</div></div>
+    <div class="hst"><div class="hst-n">350+</div><div class="hst-l">Clients</div></div>
+    <div class="hst"><div class="hst-n">5★</div><div class="hst-l">Satisfaction</div></div>
+  </div>
+</section>
+<div class="mq"><div class="mq-t" id="mqt"></div></div>
+<section id="catalogue">
+  <div class="rv">
+    <div class="sec-tag">Notre sélection</div>
+    <h2 class="sec-title">Catalogue <em>Véhicules</em></h2>
+    <p class="sec-sub">Des véhicules neufs et d'occasion soigneusement sélectionnés. Cliquez sur "Commander" pour passer votre commande.</p>
+  </div>
+  <div class="filters rv">
+    <button class="fbtn on" onclick="filterCars('all',this)">Tous</button>
+    <button class="fbtn" onclick="filterCars('neuf',this)">Neufs</button>
+    <button class="fbtn" onclick="filterCars('occasion',this)">Occasion</button>
+    <button class="fbtn" onclick="filterCars('suv',this)">SUV</button>
+    <button class="fbtn" onclick="filterCars('berline',this)">Berlines</button>
+    <button class="fbtn" onclick="filterCars('pickup',this)">Pick-up</button>
+  </div>
+  <div class="cars rv" id="carsGrid"><div class="spinner-wrap"><div class="spinner"></div>Chargement des véhicules...</div></div>
+</section>
+<section id="pourquoi">
+  <div class="rv">
+    <div class="sec-tag">Nos engagements</div>
+    <h2 class="sec-title">Pourquoi nous <em>choisir</em> ?</h2>
+    <p class="sec-sub">Chez Villageois Civilisé, chaque véhicule est inspecté, chaque client est accompagné.</p>
+  </div>
+  <div class="why-grid rv">
+    <div class="wcard"><div class="wicon">🔍</div><div class="wtitle">Inspection garantie</div><div class="wdesc">Chaque véhicule est inspecté par nos experts avant mise en vente. Vous achetez en toute confiance.</div></div>
+    <div class="wcard"><div class="wicon">💰</div><div class="wtitle">Prix transparents</div><div class="wdesc">Pas de frais cachés. Le prix affiché est le prix payé. Paiement flexible disponible.</div></div>
+    <div class="wcard"><div class="wicon">🤝</div><div class="wtitle">Accompagnement complet</div><div class="wdesc">Nous vous guidons de la sélection jusqu'à la remise des clés en main propre.</div></div>
+    <div class="wcard"><div class="wicon">📞</div><div class="wtitle">Support 24/7</div><div class="wdesc">Notre équipe est disponible via WhatsApp pour toutes vos questions avant et après achat.</div></div>
+  </div>
+</section>
+<section id="temoignages">
+  <div class="rv">
+    <div class="sec-tag">Ils nous font confiance</div>
+    <h2 class="sec-title">Ce que disent nos <em>clients</em></h2>
+    <p class="sec-sub">Des centaines de clients satisfaits en RDC nous font confiance chaque mois.</p>
+  </div>
+  <div class="tgrid rv" id="temoGrid"><div class="spinner-wrap"><div class="spinner"></div></div></div>
+</section>
+<section id="contact">
+  <div class="cgrid">
+    <div class="cinfo rv">
+      <div class="sec-tag">Nous joindre</div>
+      <h3>Contactez <em style="font-style:italic;color:var(--gold)">notre équipe</em></h3>
+      <p>Disponibles via WhatsApp, Facebook ou Instagram. Réponse rapide garantie !</p>
+      <div class="citems">
+        <div class="ci"><div class="ciicon">📱</div><div><div class="cilabel">WhatsApp</div><div class="cival">+243 898 446 173</div></div></div>
+        <div class="ci"><div class="ciicon">📱</div><div><div class="cilabel">WhatsApp 2</div><div class="cival">+243 903 906 052</div></div></div>
+        <div class="ci"><div class="ciicon">📍</div><div><div class="cilabel">Localisation</div><div class="cival">Kinshasa, RDC</div></div></div>
+      </div>
+      <div class="socials">
+        <a class="soc" href="https://www.facebook.com/profile.php?id=61579243417476" target="_blank">📘 Facebook</a>
+        <a class="soc" href="https://www.instagram.com/villageoiscivilisee" target="_blank">📸 Instagram</a>
+        <a class="soc" href="https://wa.me/243898446173" target="_blank">💬 WhatsApp</a>
+      </div>
+    </div>
+    <div class="cform rv">
+      <h4>Envoyer un message</h4>
+      <div class="frow">
+        <div class="fg"><label>Prénom</label><input type="text" id="cPrenom" placeholder="Votre prénom"></div>
+        <div class="fg"><label>Nom</label><input type="text" id="cNom" placeholder="Votre nom"></div>
+      </div>
+      <div class="fg"><label>Téléphone / WhatsApp</label><input type="tel" id="cTel" placeholder="+243 ..."></div>
+      <div class="fg"><label>Véhicule qui vous intéresse</label><input type="text" id="cVehicule" placeholder="Ex: Toyota Hilux, Range Rover..."></div>
+      <div class="fg"><label>Message</label><textarea id="cMsg" placeholder="Votre message..."></textarea></div>
+      <button class="fsub" onclick="sendContact()">Envoyer le message 📩</button>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="fgrid">
+    <div class="fbrand">
+      <div class="nl" style="text-decoration:none;"><div class="ni">VC</div><div class="nt">Villageois Civilisé <span>Véhicules · RDC</span></div></div>
+      <p>Votre partenaire de confiance pour l'achat de véhicules neufs et d'occasion en RDC.</p>
+    </div>
+    <div class="fcol"><h4>Navigation</h4><ul><li><a href="#hero">Accueil</a></li><li><a href="#catalogue">Catalogue</a></li><li><a href="#pourquoi">Pourquoi nous</a></li><li><a href="#temoignages">Témoignages</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div class="fcol"><h4>Contact</h4><ul><li><a href="https://wa.me/243898446173" target="_blank">WhatsApp 1</a></li><li><a href="https://wa.me/243903906052" target="_blank">WhatsApp 2</a></li><li><a href="https://www.facebook.com/profile.php?id=61579243417476" target="_blank">Facebook</a></li><li><a href="https://www.instagram.com/villageoiscivilisee" target="_blank">Instagram</a></li></ul></div>
+  </div>
+  <div class="fbot"><p>© 2025 <strong>Villageois Civilisé</strong>. Tous droits réservés. Kinshasa, RDC.</p><p>Fait avec ❤️ pour la RDC</p></div>
+</footer>
+<div class="ov" id="orderModal">
+  <div class="om">
+    <div class="omh"><h3>Passer une commande</h3><button class="omx" onclick="closeOrder()">✕</button></div>
+    <div class="omb" id="omBody">
+      <div class="ocar" id="ocarInfo"></div>
+      <div class="frow">
+        <div class="fg"><label>Prénom</label><input type="text" id="oPrenom" placeholder="Prénom"></div>
+        <div class="fg"><label>Nom</label><input type="text" id="oNom" placeholder="Nom"></div>
+      </div>
+      <div class="fg"><label>WhatsApp / Téléphone</label><input type="tel" id="oTel" placeholder="+243 ..."></div>
+      <div class="fg"><label>Ville / Adresse</label><input type="text" id="oVille" placeholder="Kinshasa, Gombe..."></div>
+      <div class="fg"><label>Mode de paiement</label>
+        <select id="oPay"><option>Cash</option><option>M-Pesa</option><option>Orange Money</option><option>Airtel Money</option><option>Virement bancaire</option></select>
+      </div>
+      <div class="fg"><label>Message (optionnel)</label><textarea id="oMsg" placeholder="Questions, précisions..."></textarea></div>
+      <button class="osub" onclick="submitOrder()">✅ Confirmer la commande</button>
+    </div>
+    <div class="sbox" id="oSuccess">
+      <div class="si">🎉</div><h3>Commande reçue !</h3>
+      <p>Merci ! Notre équipe vous contactera sur WhatsApp dans les plus brefs délais pour confirmer les détails.</p>
+      <br><a class="btn1" href="https://wa.me/243898446173" target="_blank" style="display:inline-block;margin-top:.5rem;">Discuter sur WhatsApp</a>
+    </div>
+  </div>
+</div>
+<div id="toast">✅ <span id="toastMsg">Message</span></div>
+
+<script>
+// ── SUPABASE
+const SB_URL = 'https://pxlcffmiuwlsvfzcvvtu.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4bGNmZm1pdXdsc3ZmemN2dnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4ODE4NjUsImV4cCI6MjA5MTQ1Nzg2NX0.m0TVDyfUIgarf4ElSEbZ_WBIZDzddb4ugSvOKxHrkaI';
+const HDR = {'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'};
+
+async function sbGet(table, q=''){
+  const r = await fetch(`${SB_URL}/rest/v1/${table}?${q}`, {headers:HDR});
+  return r.json();
+}
+async function sbPost(table, body){
+  return fetch(`${SB_URL}/rest/v1/${table}`, {method:'POST', headers:{...HDR,'Prefer':'return=minimal'}, body:JSON.stringify(body)});
+}
+
+const WA1 = '243898446173';
+let CARS = [];
+let currentCar = null;
+let filterActive = 'all';
+let likes = JSON.parse(localStorage.getItem('vc_likes')||'{}');
+
+// MARQUEE
+const mqItems=['Véhicules Neufs','Occasion Certifiés','WhatsApp Support','Toyota','Mercedes','BMW','Range Rover','Ford','Prix Compétitifs','Qualité Garantie'];
+const mqEl=document.getElementById('mqt');
+[...mqItems,...mqItems].forEach(t=>{const s=document.createElement('span');s.textContent=t;mqEl.appendChild(s);});
+
+// LOAD CARS
+async function loadCars(){
+  try{
+    const data = await sbGet('cars','order=created_at.asc');
+    CARS = Array.isArray(data) ? data : [];
+    renderCars('all');
+  } catch(e){
+    document.getElementById('carsGrid').innerHTML='<p style="color:var(--gray);text-align:center;padding:2rem;grid-column:1/-1;">Erreur de chargement.</p>';
+  }
+}
+
+// LOAD TEMOS
+async function loadTemos(){
+  try{
+    const data = await sbGet('temoignages','order=created_at.asc');
+    const temos = Array.isArray(data)?data:[];
+    document.getElementById('temoGrid').innerHTML = temos.length ? temos.map(t=>{
+      const ini=(t.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+      return `<div class="tcard">
+        <div class="tstars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+        <div class="ttxt">${t.text}</div>
+        <div class="tauth"><div class="tavt">${ini}</div><div><div class="tname">${t.name}</div><div class="tcity">${t.city||''}</div></div></div>
+      </div>`;
+    }).join('') : '<p style="color:var(--gray);text-align:center;padding:2rem;">Aucun témoignage pour l\'instant.</p>';
+  } catch(e){}
+}
+
+// RENDER CARS
+function renderCars(filter){
+  const grid = document.getElementById('carsGrid');
+  const list = filter==='all' ? CARS : CARS.filter(c=>c.condition===filter||c.type===filter);
+  if(!list.length){
+    grid.innerHTML='<p style="color:var(--gray);text-align:center;padding:3rem;grid-column:1/-1;">Aucun véhicule dans cette catégorie.</p>';
+    return;
+  }
+  grid.innerHTML = list.map(c=>{
+    const imgs = Array.isArray(c.imgs)&&c.imgs.length ? c.imgs : (c.img?[c.img]:[]);
+    const fallback = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80';
+    const allImgs = imgs.length ? imgs : [fallback];
+    const id = c.id;
+    const hasMany = allImgs.length > 1;
+    return `<div class="car">
+      <div class="cimg">
+        <div class="cimg-slider" id="slider${id}">${allImgs.map(u=>`<img src="${u}" alt="${c.name}" loading="lazy">`).join('')}</div>
+        <span class="cbadge ${c.condition==='occasion'?'occ':''}">${c.condition==='neuf'?'Neuf':'Occasion'}</span>
+        <button class="clike ${likes[id]?'liked':''}" onclick="toggleLike('${id}',this)"><span>${likes[id]?'❤️':'🤍'}</span></button>
+        ${hasMany?`<button class="cimg-arrow left" onclick="slideImg('${id}',-1,event)">‹</button><button class="cimg-arrow right" onclick="slideImg('${id}',1,event)">›</button><div class="cimg-dots" id="dots${id}">${allImgs.map((_,i)=>`<span class="${i===0?'act':''}"></span>`).join('')}</div>`:''}
+      </div>
+      <div class="cbody">
+        <div class="cbrand">${c.brand}</div>
+        <div class="cname">${c.name}</div>
+        <div class="cspecs">
+          <div class="csp">📅 <b>${c.year}</b></div>
+          <div class="csp">🛣️ <b>${c.km} km</b></div>
+          <div class="csp">⛽ <b>${c.fuel}</b></div>
+          ${c.location?`<div class="csp">📍 <b>${c.location}</b></div>`:''}
+        </div>
+        <div class="cfoot">
+          <div class="cprice">${c.price}<small>Prix indicatif</small></div>
+          <div class="cbtns">
+            <a class="cwha" href="https://wa.me/${WA1}?text=${encodeURIComponent('Bonjour ! Je suis intéressé(e) par : '+c.brand+' '+c.name+' ('+c.year+') à '+c.price+'.')}" target="_blank">💬 Discuter</a>
+            <button class="corder" onclick="openOrder('${id}')">Commander</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+const sliderState = {};
+function slideImg(id, dir, e) {
+  if(e) e.stopPropagation();
+  const slider = document.getElementById('slider'+id);
+  const dots = document.getElementById('dots'+id);
+  if(!slider) return;
+  const total = slider.children.length;
+  if(!sliderState[id]) sliderState[id] = 0;
+  sliderState[id] = (sliderState[id] + dir + total) % total;
+  slider.style.transform = `translateX(-${sliderState[id]*100}%)`;
+  if(dots) {
+    dots.querySelectorAll('span').forEach((s,i) => s.classList.toggle('act', i===sliderState[id]));
+  }
+}
+function startAutoSlide() {
+  setInterval(() => {
+    document.querySelectorAll('[id^="slider"]').forEach(slider => {
+      const id = slider.id.replace('slider','');
+      if(slider.children.length > 1) slideImg(id, 1, null);
+    });
+  }, 3500);
+}
+
+function filterCars(f,btn){
+  filterActive=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderCars(f);
+}
+
+function toggleLike(id,btn){
+  likes[id]=!likes[id];
+  localStorage.setItem('vc_likes',JSON.stringify(likes));
+  btn.classList.toggle('liked',likes[id]);
+  btn.querySelector('span').textContent=likes[id]?'❤️':'🤍';
+  showToast(likes[id]?'❤️ Ajouté aux favoris !':'🤍 Retiré des favoris');
+}
+
+function openOrder(id){
+  currentCar=CARS.find(c=>String(c.id)===String(id));
+  if(!currentCar)return;
+  const imgs=Array.isArray(currentCar.imgs)&&currentCar.imgs.length?currentCar.imgs:(currentCar.img?[currentCar.img]:[]);
+  document.getElementById('ocarInfo').innerHTML=`<img src="${imgs[0]||''}"><div><div class="oname">${currentCar.brand} ${currentCar.name}</div><div class="oprice">${currentCar.price}</div></div>`;
+  document.getElementById('omBody').style.display='block';
+  document.getElementById('oSuccess').classList.remove('show');
+  document.getElementById('orderModal').classList.add('on');
+}
+function closeOrder(){document.getElementById('orderModal').classList.remove('on');}
+
+async function submitOrder(){
+  const prenom=document.getElementById('oPrenom').value.trim();
+  const nom=document.getElementById('oNom').value.trim();
+  const tel=document.getElementById('oTel').value.trim();
+  const ville=document.getElementById('oVille').value.trim();
+  const pay=document.getElementById('oPay').value;
+  const msg=document.getElementById('oMsg').value.trim();
+  if(!prenom||!nom||!tel){showToast('⚠️ Remplissez les champs obligatoires');return;}
+  const orderId='CMD-'+Date.now();
+  await sbPost('orders',{
+    id:orderId,date:new Date().toISOString(),
+    client_prenom:prenom,client_nom:nom,client_tel:tel,client_ville:ville,
+    voiture:`${currentCar.brand} ${currentCar.name} (${currentCar.year})`,
+    prix:currentCar.price,paiement:pay,message:msg,statut:'En attente'
+  });
+  document.getElementById('omBody').style.display='none';
+  document.getElementById('oSuccess').classList.add('show');
+  const waMsg=`🚗 *NOUVELLE COMMANDE — Villageois Civilisé*\n\n👤 ${prenom} ${nom}\n📱 ${tel}\n📍 ${ville}\n\n🚘 ${currentCar.brand} ${currentCar.name} (${currentCar.year})\n💰 ${currentCar.price}\n💳 ${pay}\n${msg?'📝 '+msg:''}\n\n🆔 Réf: ${orderId}`;
+  setTimeout(()=>window.open(`https://wa.me/${WA1}?text=${encodeURIComponent(waMsg)}`,'_blank'),1200);
+}
+
+function sendContact(){
+  const prenom=document.getElementById('cPrenom').value.trim();
+  const tel=document.getElementById('cTel').value.trim();
+  if(!prenom||!tel){showToast('⚠️ Prénom et téléphone requis');return;}
+  const waMsg=`💬 *Message site — Villageois Civilisé*\n\n👤 ${prenom} ${document.getElementById('cNom').value.trim()}\n📱 ${tel}\n🚗 ${document.getElementById('cVehicule').value.trim()}\n📝 ${document.getElementById('cMsg').value.trim()}`;
+  window.open(`https://wa.me/${WA1}?text=${encodeURIComponent(waMsg)}`,'_blank');
+}
+
+function showToast(msg,dur=3000){
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+const cur=document.getElementById('cur');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sm',window.scrollY>80));
+function closeMob(){document.getElementById('mobNav').classList.remove('on');}
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('out'),1500));
+document.getElementById('orderModal').addEventListener('click',e=>{if(e.target===document.getElementById('orderModal'))closeOrder();});
+
+loadCars().then(() => startAutoSlide());
+loadTemos();
+</script>
+</body>
+</html>
